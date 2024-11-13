@@ -11,40 +11,49 @@ dnsmasq for handling DNS requests.
 Setup
 1. Install dnsmasq
 Ensure dnsmasq is installed on your system.
+```
 
-bash
-Copy code
 sudo apt update
 sudo apt install dnsmasq
+```
+
 2. Configure dnsmasq
 Edit the dnsmasq configuration to allow dynamic DNS updates:
 
-bash
-Copy code
+```
+
 sudo nano /etc/dnsmasq.conf
+```
+
 Add the following lines:
 
-plaintext
-Copy code
+```
+
 conf-dir=/etc/dnsmasq.d/,*.conf
+```
+
 Then create a file for VPN user entries:
 
-bash
-Copy code
+```
+
 sudo touch /etc/dnsmasq.d/vpn_users.conf
+```
+
 3. Configure the update_vpn_dns.sh Script
 This script will retrieve the connected VPN users and their assigned local IPs, then update dnsmasq accordingly.
 
 Place the script in /usr/local/bin/ and make it executable:
 
-bash
-Copy code
+```
+
 sudo chmod +x /usr/local/bin/update_vpn_dns.sh
+```
+
 Script Content
 Here’s the core of the update_vpn_dns.sh script:
 
-bash
-Copy code
+```
+
 #!/bin/bash
 # Path to the SoftEther vpncmd tool
 VPNCMD_PATH="/usr/local/vpnserver/vpncmd"
@@ -80,17 +89,23 @@ done < /tmp/vpn_iptable_output.txt
 # Restart dnsmasq to apply changes
 echo "Restarting dnsmasq..."
 sudo systemctl restart dnsmasq
+```
+
 4. Automate the Script
 Set up a cron job to run the script every minute to update the DNS records dynamically.
 
-bash
-Copy code
+```
+
 sudo crontab -e
+```
+
 Add the following line:
 
-plaintext
-Copy code
+```
+
 * * * * * /usr/local/bin/update_vpn_dns.sh
+```
+
 5. Test DNS Resolution
 After running the script, verify DNS entries by connecting a VPN client and pinging the assigned .local domain (e.g., ping username.local).
 
